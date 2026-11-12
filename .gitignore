@@ -1,0 +1,17 @@
+# Build products
+.build/
+build/
+DerivedData/
+
+# Xcode user state
+*.xcuserstate
+xcuserdata/
+
+# macOS
+.DS_Store
+._*
+
+# Local scratch
+.scratch/
+.devdata/
+*.log
