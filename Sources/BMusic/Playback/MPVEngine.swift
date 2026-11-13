@@ -41,6 +41,7 @@ final class MPVEngine {
     private let stateLock = NSLock()
     private var stopping = false
     private var started = false
+    private var skipDestroy = false
 
     var onEvent: ((MPVEvent) -> Void)?
 
@@ -155,6 +156,12 @@ final class MPVEngine {
         setPropertyString("http-header-fields", "")
     }
 
+    /// 进程即将退出时调用：跳过 mpv_terminate_destroy。退出时由系统回收资源，
+    /// 避免销毁期间 CoreAudio 热插拔回调与释放竞态（SIGSEGV in hotplug_cb）。
+    func skipDestroyOnExit() {
+        skipDestroy = true
+    }
+
     func shutdown() {
         stateLock.lock()
         if stopping {
@@ -166,6 +173,16 @@ final class MPVEngine {
         stateLock.unlock()
 
         guard wasStarted, let handle else { return }
+        if skipDestroy {
+            mpv_wakeup(handle)
+            _ = eventThread.wait(timeout: .now() + 1.0)
+            self.handle = nil
+            started = false
+            return
+        }
+        // 先让 mpv 核心自己卸载音频输出（同步移除 CoreAudio 监听），
+        // 再销毁上下文，缩小设备事件回调的竞态窗口。
+        command(["quit"])
         mpv_wakeup(handle)
         _ = eventThread.wait(timeout: .now() + 2.0)
         mpv_terminate_destroy(handle)

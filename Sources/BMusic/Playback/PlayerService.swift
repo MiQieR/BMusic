@@ -122,7 +122,12 @@ final class PlayerService: ObservableObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            Task { @MainActor in self?.saveSnapshotNow() }
+            Task { @MainActor in
+                guard let self else { return }
+                self.saveSnapshotNow()
+                // 进程要退出了：跳过 libmpv 销毁，规避退出期音频事件竞态崩溃。
+                self.engine?.skipDestroyOnExit()
+            }
         }
         #else
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])

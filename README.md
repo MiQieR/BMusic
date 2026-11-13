@@ -82,7 +82,8 @@ swift build -c release \
 仓库自带 GitHub Actions（`.github/workflows/build.yml`）：
 
 - 推送到 `main` 或手动触发 workflow 时，自动构建 macOS Release 与 iOS 未签名 IPA，并以 Artifact 形式上传。
-- 推送 `v*` 形式的标签（如 `v1.0.1`）时，额外把 `BMusic.dmg` 与 `BMusic-unsigned.ipa` 发布到对应的 GitHub Release。
+- 每次构建后自动刷新滚动发布的 [latest 预发布](https://github.com/MiQieR/BMusic/releases/tag/latest)，始终附最新 DMG 与 IPA。
+- 推送 `v*` 形式的标签（如 `v1.0.1`）时，额外发布对应的稳定版 GitHub Release。
 
 DMG 内含 `BMusic.app` 与指向 `/Applications` 的快捷方式，拖拽即可完成安装。
 
