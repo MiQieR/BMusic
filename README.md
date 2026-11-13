@@ -12,6 +12,8 @@ BMusic 是一个使用 SwiftUI 编写的哔哩哔哩音乐播放器，覆盖 iPh
 | ![搜索](Documentation/Screenshots/iphone-search.jpg) | | |
 | ![播放](Documentation/Screenshots/iphone-player.jpg) | | |
 | ![设置](Documentation/Screenshots/iphone-settings.jpg) | ![登录](Documentation/Screenshots/iphone-login.jpg) | |
+| | | ![登录](Documentation/Screenshots/mac-login.jpg) |
+| | | ![歌词](Documentation/Screenshots/mac-lyrics.jpg) |
 
 ## 功能
 
